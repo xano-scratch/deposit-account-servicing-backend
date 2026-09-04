@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deposit Account Servicing Backend — a Xano proof artifact</title>
+    <meta
+      name="description"
+      content="A governed deposit-servicing backend: every debit and credit posts through one rule layer that enforces balance, overdraft, and hold limits and writes an immutable ledger. A Xano Backend Modernization proof for banking."
+    />
+    <style>
+      :root {
+        --bg: #0a0a0a;
+        --panel: #151515;
+        --panel-2: #1c1c1c;
+        --border: #2a2a2a;
+        --fg: #ededed;
+        --muted: #a1a1a1;
+        --primary: #ededed;
+        --primary-fg: #0a0a0a;
+        --accent: #4ade80;
+        --danger: #f87171;
+        --radius: 12px;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+      a { color: inherit; }
+      code, pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      header { padding: 28px 0 8px; }
+      .brand { display: flex; align-items: center; gap: 12px; font-weight: 600; letter-spacing: -0.01em; }
+      .logo {
+        width: 38px; height: 38px; border-radius: 10px;
+        background: var(--primary); color: var(--primary-fg);
+        display: grid; place-items: center; font-size: 20px;
+      }
+
+      .hero { padding: 40px 0 8px; }
+      .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+      .badge {
+        font-size: 12.5px; font-weight: 500; padding: 4px 11px; border-radius: 999px;
+        border: 1px solid var(--border); background: var(--panel); color: var(--muted);
+      }
+      h1 { font-size: 40px; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 14px; }
+      .tagline { font-size: 19px; color: var(--muted); max-width: 42ch; margin: 0 0 18px; }
+      .meta { font-size: 14px; color: var(--muted); margin: 0 0 22px; }
+      .meta strong { color: var(--fg); font-weight: 600; }
+
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 34px; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-size: 15px; font-weight: 600; text-decoration: none;
+        padding: 10px 18px; border-radius: 10px; border: 1px solid transparent;
+        transition: transform 0.05s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+      .btn:active { transform: translateY(1px); }
+      .btn.primary { background: var(--primary); color: var(--primary-fg); }
+      .btn.primary:hover { background: #ffffff; }
+      .btn.ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+      .btn.ghost:hover { border-color: #444; background: var(--panel); }
+
+      .shot {
+        width: 100%; border: 1px solid var(--border); border-radius: var(--radius);
+        display: block; margin: 8px 0 8px; box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.9);
+      }
+      .caption { font-size: 13px; color: var(--muted); text-align: center; margin: 12px 0 44px; }
+
+      section { padding: 20px 0; }
+      h2 { font-size: 24px; letter-spacing: -0.01em; margin: 0 0 8px; }
+      .lead { color: var(--muted); margin: 0 0 24px; max-width: 62ch; }
+
+      .grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+      @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 32px; } }
+      .card {
+        border: 1px solid var(--border); background: var(--panel);
+        border-radius: var(--radius); padding: 20px;
+      }
+      .card h3 { margin: 0 0 6px; font-size: 16px; }
+      .card p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+      table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 6px; }
+      th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+      th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+      td code { color: var(--fg); font-size: 13px; }
+      .role { color: var(--accent); white-space: nowrap; font-size: 13px; }
+
+      pre {
+        background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px;
+        padding: 16px 18px; overflow-x: auto; font-size: 13.5px; color: var(--fg); line-height: 1.7;
+      }
+      .use p { color: var(--muted); }
+      .note {
+        border: 1px solid var(--border); background: var(--panel);
+        border-radius: var(--radius); padding: 16px 18px; color: var(--muted); font-size: 14px;
+      }
+      footer { color: var(--muted); font-size: 13px; padding: 40px 0 56px; border-top: 1px solid var(--border); margin-top: 40px; }
+      ul.screens { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+      ul.screens li { color: var(--muted); font-size: 14.5px; }
+      ul.screens strong { color: var(--fg); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="brand"><span class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 21 8 3 8"></polygon><line x1="5" y1="8" x2="5" y2="21"></line><line x1="12" y1="8" x2="12" y2="21"></line><line x1="19" y1="8" x2="19" y2="21"></line><line x1="3" y1="21" x2="21" y2="21"></line></svg></span> Deposit Account Servicing</div>
+      </header>
+
+      <div class="hero">
+        <div class="badges">
+          <span class="badge">Play 2 &middot; Backend Modernization</span>
+          <span class="badge">Banking</span>
+          <span class="badge">Built with @xanots/sdk</span>
+        </div>
+        <h1>One governed rule layer for every debit, credit, and hold.</h1>
+        <p class="tagline">
+          A deposit-servicing backend where posting rules and available balance live in one readable API
+          layer, backed by an immutable ledger, standing in for a legacy core banking servicing stack.
+        </p>
+        <p class="meta"><strong>6 tables</strong> &middot; <strong>9 APIs</strong> &middot; <strong>1 shared function</strong> &middot; API-layer RBAC</p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="https://github.com/xano-scratch/deposit-account-servicing-backend">View on GitHub</a>
+          <a class="btn ghost" href="#use">Use this template</a>
+        </div>
+      </div>
+
+      <img
+        class="shot"
+        src="screenshot.png"
+        alt="Account detail showing the posted balance, the amount on hold, and the derived available balance, with a debit rejected by the rule layer"
+      />
+      <p class="caption">
+        A debit that fits the posted balance is rejected because an active hold makes the available balance
+        too low. The rule layer records why, and writes no ledger row.
+      </p>
+
+      <section>
+        <h2>What it demonstrates</h2>
+        <p class="lead">
+          A Backend Modernization proof for banking. The servicing rules a legacy monolith buries across
+          its code live here in one place a modernization architect can read, run, and trust.
+        </p>
+        <div class="grid">
+          <div class="card">
+            <h3>One posting engine</h3>
+            <p>Status, overdraft, hold-aware available balance, and a supervisor threshold are all enforced by a single endpoint. One thing to read, one thing to audit.</p>
+          </div>
+          <div class="card">
+            <h3>Available balance is derived</h3>
+            <p>Posted balance minus the sum of active holds, computed once in a shared function that both the posting rule and the account read call. The number on screen is the number the rule enforces.</p>
+          </div>
+          <div class="card">
+            <h3>Append-only ledger</h3>
+            <p>No endpoint edits or deletes a transaction. The balance moves only when a ledger row is appended, so the ledger is the system of record.</p>
+          </div>
+          <div class="card">
+            <h3>API-layer access control</h3>
+            <p>Teller, supervisor, and viewer roles gate each endpoint with a check on the caller's identity. This is middleware and RBAC, never row-level security. A hidden button is still refused if called directly.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>API surface</h2>
+        <p class="lead">Every endpoint hangs off one API group with a pinned canonical slug, so paths stay stable at <code>/api:servicing/...</code>.</p>
+        <table>
+          <thead>
+            <tr><th>Verb</th><th>Path</th><th>Access</th><th>What it enforces</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>POST</td><td><code>/auth/login</code></td><td class="role">public</td><td>Verifies credentials, mints a role scoped token.</td></tr>
+            <tr><td>POST</td><td><code>/accounts/open</code></td><td class="role">teller +</td><td>Opens an account, writes an audit event.</td></tr>
+            <tr><td>GET</td><td><code>/accounts/list</code></td><td class="role">any role</td><td>Lists accounts with their customers.</td></tr>
+            <tr><td>GET</td><td><code>/account/{account_id}</code></td><td class="role">any role</td><td>Derived available balance, ledger, holds, audit trail.</td></tr>
+            <tr><td>POST</td><td><code>/transactions/post</code></td><td class="role">teller +</td><td>The posting engine: status, overdraft, hold, and role rules.</td></tr>
+            <tr><td>POST</td><td><code>/holds/place</code></td><td class="role">teller +</td><td>Places an active hold, lowering available balance.</td></tr>
+            <tr><td>POST</td><td><code>/holds/release</code></td><td class="role">supervisor</td><td>Releases a hold, restoring available balance.</td></tr>
+            <tr><td>POST</td><td><code>/accounts/freeze</code></td><td class="role">supervisor</td><td>Toggles active and frozen; frozen blocks postings.</td></tr>
+            <tr><td>POST</td><td><code>/seed</code></td><td class="role">public</td><td>Resets and reloads the demo data.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>The frontend</h2>
+        <p class="lead">React, Vite, Tailwind, and shadcn/ui, deriving its paths and types from the query defs (the one contract).</p>
+        <ul class="screens">
+          <li><strong>Login</strong> — sign in as a seeded teller, supervisor, or viewer to see how the same screens gate by role.</li>
+          <li><strong>Accounts list</strong> — account number, customer, type, balance, and status, with a teller-plus form to open an account.</li>
+          <li><strong>Account detail</strong> — posted, on-hold, and available balances, the immutable ledger, active holds, and the servicing audit trail.</li>
+          <li><strong>Role-gated actions</strong> — post a transaction, place or release a hold, and freeze or unfreeze, each shown only to a role that may use it (and still checked server side).</li>
+        </ul>
+      </section>
+
+      <section class="use" id="use">
+        <h2>Use this template</h2>
+        <p>Point your coding agent at this repo and let it bring up a live copy:</p>
+        <pre><code>Use the Xano template at
+https://github.com/xano-scratch/deposit-account-servicing-backend
+
+Clone it, run `npm install`, then `npx xanots login` and
+`npm run xano:deploy` to bring up a live copy. Then help me adapt the
+posting rules and the schema to my own deposit-servicing domain.</code></pre>
+        <p>Or do it yourself:</p>
+        <pre><code>git clone https://github.com/xano-scratch/deposit-account-servicing-backend.git
+cd deposit-account-servicing-backend
+npm install
+npx xanots login
+npm run xano:deploy</code></pre>
+        <div class="note">
+          The deploy targets a live <strong>ephemeral</strong> environment that expires. The links shared with
+          any single build stop serving when it does, so redeploy for fresh ones. The durable artifact is this
+          repo, which anyone can deploy in a minute.
+        </div>
+      </section>
+
+      <footer>
+        <div class="wrap" style="padding: 0">
+          A Xano proof artifact in the <code>xano-scratch</code> org. Built with
+          <a href="https://www.npmjs.com/package/@xanots/sdk">@xanots/sdk</a>. Demo data only, not a
+          production system.
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

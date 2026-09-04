@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "objects": {
+    "app:servicing": {
+      "guid": "70204875c4d808c06fc319bc246e3b86",
+      "canonical": "servicing",
+      "canonical_source": "code"
+    },
+    "dbo:accounts": {
+      "guid": "d79ee2e0226ccb53c0abc59b83e4ac40"
+    },
+    "dbo:customers": {
+      "guid": "e7b073506cc02642649907152fe5bedf"
+    },
+    "dbo:holds": {
+      "guid": "abf7d41dba4d226d82c6a067ea8a7c09"
+    },
+    "dbo:servicing_events": {
+      "guid": "a25f64b9bfe0af33094f0122c95ce7a5"
+    },
+    "dbo:transactions": {
+      "guid": "2a5b3c18b00ba6132fb855f1a2686ac8"
+    },
+    "dbo:users": {
+      "guid": "157d4a98d979cf04b9ccdb98dfc15229"
+    },
+    "function:account_snapshot": {
+      "guid": "55f3a72f1b2ef91f760d6b6b6ec53832"
+    },
+    "query:servicing|GET|account/{account_id}": {
+      "guid": "2835b87b8ea5abe72ca6f2df67515b70"
+    },
+    "query:servicing|GET|accounts/list": {
+      "guid": "567ec8876c2339aa997823d7a69a0513"
+    },
+    "query:servicing|POST|accounts/freeze": {
+      "guid": "3b91b5a616b10add8c225ae0b94b1e3b"
+    },
+    "query:servicing|POST|accounts/open": {
+      "guid": "3beb54ab27900a2836efaa20b8ec5b64"
+    },
+    "query:servicing|POST|auth/login": {
+      "guid": "940ea9137717920b444a9d98fb3c8854"
+    },
+    "query:servicing|POST|holds/place": {
+      "guid": "ee1760da6c4054b0d1052e5dc728378c"
+    },
+    "query:servicing|POST|holds/release": {
+      "guid": "1789565eda4b339bf269025c6f6f8c98"
+    },
+    "query:servicing|POST|seed": {
+      "guid": "416258fd0176f27096acc2418b39cf2d"
+    },
+    "query:servicing|POST|transactions/post": {
+      "guid": "f9384af78a3328f37fc0022fed384fa4"
+    }
+  }
+}

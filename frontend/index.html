@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deposit Account Servicing Backend</title>
+    <meta
+      name="description"
+      content="A governed deposit-servicing backend: every debit and credit posts through one rule layer that enforces balance, overdraft, and hold limits and writes an immutable ledger."
+    />
+    <script>
+      // Pin the dark theme before first paint, so the whole template set reads
+      // consistently. Keep this inline and above the stylesheet.
+      document.documentElement.classList.add("dark");
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
